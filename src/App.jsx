@@ -5,7 +5,7 @@ import styled from 'styled-components';
 
 import { theme } from './styles/theme';
 import { GlobalStyles } from './styles/GlobalStyles';
-import { AuthProvider, useAuth } from './context/AuthContext';
+import { AuthProvider } from './context/AuthContext';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { Navbar } from './components/Navbar';
 
@@ -27,60 +27,44 @@ const MainContent = styled.main`
 `;
 
 const AppContent = () => {
-  const { isAuthenticated, loading } = useAuth();
-
-  if (loading) {
-    return null;
-  }
-
   return (
     <AppLayout>
-      {isAuthenticated && <Navbar />}
+      <Navbar />
       <MainContent>
         <Routes>
-          {/* Se não autenticado, qualquer acesso exibe a tela de login */}
-          {!isAuthenticated ? (
-            <>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="*" element={<Navigate to="/login" replace />} />
-            </>
-          ) : (
-            <>
-              {/* Rotas autenticadas */}
-              <Route path="/" element={<HomePage />} />
-              <Route path="/posts/:id" element={<PostDetailPage />} />
-              <Route path="/login" element={<Navigate to="/" replace />} />
+          {/* Rotas públicas: Qualquer visitante ou aluno pode listar e ler posts */}
+          <Route path="/" element={<HomePage />} />
+          <Route path="/posts/:id" element={<PostDetailPage />} />
+          <Route path="/login" element={<LoginPage />} />
 
-              {/* Rotas restritas para professores e administradores */}
-              <Route
-                path="/posts/new"
-                element={
-                  <ProtectedRoute allowedRoles={['professor', 'administrador']}>
-                    <CreatePostPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/posts/:id/edit"
-                element={
-                  <ProtectedRoute allowedRoles={['professor', 'administrador']}>
-                    <EditPostPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute allowedRoles={['professor', 'administrador']}>
-                    <AdminPage />
-                  </ProtectedRoute>
-                }
-              />
+          {/* Rotas protegidas: Criação, edição e administração exigem autenticação */}
+          <Route
+            path="/posts/new"
+            element={
+              <ProtectedRoute allowedRoles={['professor', 'administrador']}>
+                <CreatePostPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/posts/:id/edit"
+            element={
+              <ProtectedRoute allowedRoles={['professor', 'administrador']}>
+                <EditPostPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute allowedRoles={['professor', 'administrador']}>
+                <AdminPage />
+              </ProtectedRoute>
+            }
+          />
 
-              {/* Redirecionamento padrão */}
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </>
-          )}
+          {/* Redirecionamento padrão para a página principal */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </MainContent>
     </AppLayout>
