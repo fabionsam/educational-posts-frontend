@@ -151,14 +151,11 @@ docker-compose down
 
 Durante o desenvolvimento deste projeto de Front-End, a equipe vivenciou momentos de grande evolução técnica e enfrentou desafios relevantes:
 
-### 1. Migração para uma Arquitetura sem Vite (Webpack + Babel)
-A decisão de estruturar o projeto utilizando Webpack 5 e Babel puros em vez de utilitários prontos como o Vite exigiu um aprofundamento na configuração de loaders (`babel-loader`, `css-loader`, `style-loader`), resolução de módulos e roteamento SPA via `historyApiFallback`. Essa escolha permitiu um entendimento aprofundado do ciclo de empacotamento de uma aplicação React e eliminou dependências obsoletas de templates legados.
-
-### 2. Validação Declarativa com Formik e Yup
+### 1. Validação Declarativa com Formik e Yup
 A substituição de formulários manuais por Formik em conjunto com esquemas de validação do Yup trouxe grande robustez ao projeto. O principal desafio foi gerenciar o ciclo de pré-carregamento dos dados na tela de edição (`EditPostPage`), resolvido através da propriedade `enableReinitialize: true`, garantindo que requisições assíncronas ao backend preenchessem os campos de formulário sem conflitos de renderização.
 
-### 3. Controle de Acesso Baseado em Papéis (RBAC) e JWT
+### 2. Controle de Acesso Baseado em Papéis (RBAC) e JWT
 Integrar o front-end ao sistema de permissões desenvolvido no back-end (onde perfis de alunos possuem permissões apenas de leitura e professores possuem posse sobre suas postagens) exigiu a criação de componentes de guarda de rotas (`ProtectedRoute`) e renderização contextual de botões de edição/exclusão. Dessa forma, a interface não apenas bloqueia ações não autorizadas visualmente, mas também protege URLs diretas caso um usuário tente digitá-las no navegador.
 
-### 4. Containerização com Nginx e CI/CD
+### 3. Containerização com Nginx e CI/CD
 Configurar um container Docker multi-stage com Nginx exigiu entender a diretiva `try_files $uri /index.html;` para que o roteamento baseado no HTML5 History API do React Router funcionasse corretamente ao recarregar a página dentro do container. A integração contínua via GitHub Actions garantiu que qualquer commit no repositório valide a compilação do bundle e disponibilize automaticamente uma imagem pronta para produção.
